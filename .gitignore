@@ -2,6 +2,7 @@
 *.xls
 *.csv
 output.json
+./temp/
 
 # Logs
 logs
