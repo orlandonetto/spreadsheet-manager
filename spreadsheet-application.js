@@ -1,6 +1,10 @@
 const xj = require('xls-to-json');
-const express = require('express')
+const express = require('express');
+const {parse} = require('json2csv');
+const fs = require('fs');
+
 const app = express()
+app.set("json spaces", 2);
 
 const config = {
     input: "input.xlsx",
@@ -66,8 +70,65 @@ app.get('/', function (req, res) {
                 invalid.push(e);
             })
             .filter(e => !!e) // Removendo os undefined
+            .sort();
 
-        return res.json(valid);
+        // Removendo duplicados
+        const validDistinct = [];
+        valid.forEach(e => {
+            const duplicated = validDistinct.findIndex(el => {
+                return e['Phone'] === el['Phone'];
+            }) > -1;
+
+            if (!duplicated)
+                validDistinct.push(e);
+        });
+
+        // Removendo duplicados
+        const invalidDistinct = [];
+        invalid.forEach(e => {
+            const duplicated = invalidDistinct.findIndex(el => {
+                return e['Phone'] === el['Phone'];
+            }) > -1;
+
+            if (!duplicated)
+                invalidDistinct.push(e);
+        });
+
+        const fields = ['User ID', 'User Name', 'Full Name', 'Phone', 'Email', 'Business', 'Tipo'];
+        const opts = {fields};
+
+        const csv = parse(validDistinct, opts);
+
+        res.attachment('/output.csv', csv);
+        res.send(csv);
+
+        // fs.writeFile('output.csv', csv, () => {
+            // res.json({
+            //     link: 'https://json-csv.com/',
+            //     valid_size: valid.length,
+            //     valid_distinct_size: validDistinct.length,
+            //     invalid_size: invalid.length,
+            //     invalid_distinct_size: invalidDistinct.length,
+            // });
+        // })
+
+        // const options = {
+        //     fieldSeparator: ',',
+        //     quoteStrings: '"',
+        //     decimalSeparator: '.',
+        //     showLabels: true,
+        //     showTitle: true,
+        //     title: 'My Awesome CSV',
+        //     useTextFile: false,
+        //     useBom: true,
+        //     useKeysAsHeaders: true,
+        //     // headers: ['Column 1', 'Column 2', etc...] <-- Won't work with useKeysAsHeaders present!
+        // };
+        //
+        // const csvExporter = new ExportToCsv(options);
+        // const a = csvExporter.generateCsv(result);
+        //
+        // return res.send(a);
     });
 })
 

@@ -9,7 +9,9 @@
   "author": "Orlando Netto",
   "license": "ISC",
   "dependencies": {
+    "export-to-csv": "^0.2.1",
     "express": "^4.17.1",
+    "json2csv": "^5.0.1",
     "node-excel-export": "^1.4.4",
     "xls-to-json": "^0.5.4"
   }
