@@ -4,8 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./spreadsheet-application.js"
   },
   "author": "Orlando Netto",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-excel-export": "^1.4.4",
+    "xls-to-json": "^0.5.4"
+  }
 }
