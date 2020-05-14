@@ -1,3 +1,5 @@
+const fundController = require('./controllers/funds-controller');
+
 const xj = require('xls-to-json');
 const express = require('express');
 const {parse} = require('json2csv');
@@ -142,5 +144,6 @@ app.post('/spreadsheet/phone/format', async (req, res) => {
         })
         .catch(err => res.status(400).json(err));
 });
+app.get('/spreadsheet/funds', fundController.getFundsData);
 
 app.listen(3010, () => console.log('Started on 3010.'));
